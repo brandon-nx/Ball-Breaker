@@ -3,25 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class MainManager : MonoBehaviour
 {
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
+    public TMP_Text playerNameText; // Reference to the TMP_Text element to display the player's name
 
-    public Text ScoreText;
+    public TextMeshProUGUI ScoreText; // Reference to your TextMeshProUGUI for score display
+
     public GameObject GameOverText;
+    public GameObject BackToMenuText;
+    public GameObject RestartText;
     
     private bool m_Started = false;
     private int m_Points;
     
     private bool m_GameOver = false;
 
-    
-    // Start is called before the first frame update
     void Start()
     {
+        // Load the player's name from PlayerPrefs (if it was stored)
+        string playerName = PlayerPrefs.GetString("PlayerName", "Player");
+
+        // Display the player's name on the UI Text element
+        playerNameText.text = $"Player: {playerName}";
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -36,6 +45,8 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+
+        DisplayPlayerName();
     }
 
     private void Update()
@@ -72,5 +83,16 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+        BackToMenuText.SetActive(true);
+        RestartText.SetActive(true);
+    }
+
+    void DisplayPlayerName()
+    {
+        // Load the player's name from PlayerPrefs (if it was stored)
+        string playerName = PlayerPrefs.GetString("PlayerName", "Player");
+
+        // Display the player's name on the TMP_Text element
+        playerNameText.text = $"BEAT {playerName} HIGH SCORE '0'";
     }
 }
